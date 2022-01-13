@@ -59,3 +59,7 @@ export function getCodeImg() {
     timeout: 20000
   })
 }
+/**
+ * 没啥好解读的，导出一个方法 getCodeImg()，
+   这个方法调用了一个get请求 /code，请求头isToken值为false，不需要token，tineout为20000,这个参数怎么用后面再看。
+ */

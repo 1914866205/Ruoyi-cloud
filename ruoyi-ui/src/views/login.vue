@@ -51,7 +51,7 @@
         如果是封装了组件，要用
         @keyup.enter.native
 
-        最后就是，按下回车键，调用handleLogin方法
+        最后效果就是，按下回车键，调用handleLogin方法
          -->
           <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
           <!-- Vue中slot的使用   https://www.cnblogs.com/qq735675958/p/8377761.html
@@ -145,10 +145,42 @@ export default {
         //如果返回的captchaOnOff是undefined，估计是没访问出来啥东西，就返回true，否则返回false
         // 什么鬼？仔细看看data里的captchaOnOff,嗷嗷，是验证码开关，初始值为true，所以这行的代码就是能不能继续 请求验证码 呗
         //如果是true，说明没返回出来东西，肯定就能继续请求，如果是false，那就不能继续请求验证码
-        //再看一下这个在哪用
-        if (this.captchaOnOff) {
-          this.codeUrl = "data:image/gif;base64," + res.img;
+        //再看一下这个在哪用captchaOnOff，哦，原来是   <el-form-item prop="code" v-if="captchaOnOff">
+        //显然，如果captchaOnOff为false就不会显示这个组件了
+        if (this.captchaOnOff) {  //如果有验证码
+          this.codeUrl = "data:image/gif;base64," + res.img; //codeUrl的值即改为 data:image/gif;base64,res.img
+          //如果你不懂 base64   看看这个 https://blog.csdn.net/weixin_38465623/article/details/80199999
+          //当然，也可以看我总结的
+          /**
+           * base64             data:image/gif;base64," + res.img
+           * data表示取得数据的协定名称，image/gif 是数据类型名称，base64 是数据的编码方法，逗号后面就是这个image/gif文件base64编码后的数据。
+           * 目前，Data URI scheme支持的类型有：
+              data:,文本数据
+              data:text/plain,文本数据
+              data:text/html,HTML代码
+              data:text/html;base64,base64编码的HTML代码
+              data:text/css,CSS代码
+              data:text/css;base64,base64编码的CSS代码
+              data:text/javascript,Javascript代码
+              data:text/javascript;base64,base64编码的Javascript代码
+              data:image/gif;base64,base64编码的gif图片数据
+              data:image/png;base64,base64编码的png图片数据
+              data:image/jpeg;base64,base64编码的jpeg图片数据
+            base64简单地说，它把一些 8-bit 数据翻译成标准 ASCII 字符，网上有很多免费的base64 编码和解码的工具，在PHP中可以用函数base64_encode() 进行编码
+举个图片的例子：
+网页中一张图片可以这样显示：
+            <img src=“http://www.aimks.com/images/wg.png”/>
+也可以这样显示
+            <img src=“data:image/png;base64,iVBORw0KGgoAAAANSUhEU
+            gAAAAEAAAAkCAYAAABIdFAMAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZS
+            BJbWFnZVJlYWR5ccllPAAAAHhJREFUeNo8zjsOxCAMBFB/KEAUFFR
+            0Cbng3nQPw68ArZdAlOZppPFIBhH5EAB8b+Tlt9MYQ6i1BuqFaq1C
+            KSVcxZ2Acs6406KUgpt5/LCKuVgz5BDCSb13ZO99ZOdcZGvt4mJjz
+            MVKqcha68iIePB86GAiOv8CDADlIUQBs7MD3wAAAABJRU5ErkJggg%3D%3D”/>
+           */
+          //显然 res.img就是传来的图片，在后端生成图片，base64图片转成字符 传输回前端，再在前端  字符转成图片  显示给用户   妙啊秒啊
           this.loginForm.uuid = res.uuid;
+          //并且表单的uuid设置为res.uuid
         }
       });
     },
