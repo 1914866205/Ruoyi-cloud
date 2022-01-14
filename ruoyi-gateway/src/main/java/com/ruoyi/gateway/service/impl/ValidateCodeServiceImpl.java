@@ -87,7 +87,7 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
 /**
  * 最终capStr就是根据验证码生成的编码
  */
-        redisService.setCacheObject(verifyKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);  //redis存储验证码，键为  captcha_codes+UUID 值为 验证码的值 ，存储时间是一分钟
+        redisService.setCacheObject(verifyKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);  //redis存储验证码，键为  captcha_codes+UUID 值为 验证码的值 ，Constants.CAPTCHA_EXPIRATION 是验证码存储的世时间，单位是分钟
         // 转换流信息写出
         /**
          * 字节数组输出流 在内存中创建一个字节数组缓冲区，所有发送到输出流的数据保存在该字节数组缓冲区中。
@@ -134,10 +134,17 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
         if (StringUtils.isEmpty(uuid)) {
             throw new CaptchaException("验证码已失效");
         }
-        String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
-        String captcha = redisService.getCacheObject(verifyKey);
-        redisService.deleteObject(verifyKey);
+        //上述内容涛涛表示有手就行
 
+        //根据传来的UUID，拼接上 验证码存储在Redis中的键的前缀，得到这个用户 在 redis 中 验证码 对应的键
+        String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
+        // 根据这个键，在Redis中获取对应的存储的值
+        String captcha = redisService.getCacheObject(verifyKey);
+        //Redis 删除这个记录
+        redisService.deleteObject(verifyKey);
+        //如果传来的验证码，和后端根据UUID拼接，在Redis中存储的验证码，在忽略大小写后，不一样
+        //说明验证码错误，抛出自定义异常 验证码错误
+        //否则不做处理，上个方法没有捕捉到内部方法有异常抛出，正常执行，即放行。
         if (!code.equalsIgnoreCase(captcha)) {
             throw new CaptchaException("验证码错误");
         }

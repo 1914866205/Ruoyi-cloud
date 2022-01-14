@@ -1,6 +1,7 @@
 package com.ruoyi.auth.controller;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,12 +20,11 @@ import com.ruoyi.system.api.model.LoginUser;
 
 /**
  * token 控制
- * 
+ *
  * @author ruoyi
  */
 @RestController
-public class TokenController
-{
+public class TokenController {
     @Autowired
     private TokenService tokenService;
 
@@ -32,8 +32,9 @@ public class TokenController
     private SysLoginService sysLoginService;
 
     @PostMapping("login")
-    public R<?> login(@RequestBody LoginBody form)
-    {
+    public R<?> login(@RequestBody LoginBody form) {
+        // R是封装的统一响应体
+        // LoginBody 就是对应的表单实体，是用户登录对象 ，form就是传来的参数
         // 用户登录
         LoginUser userInfo = sysLoginService.login(form.getUsername(), form.getPassword());
         // 获取登录token
@@ -41,11 +42,9 @@ public class TokenController
     }
 
     @DeleteMapping("logout")
-    public R<?> logout(HttpServletRequest request)
-    {
+    public R<?> logout(HttpServletRequest request) {
         String token = SecurityUtils.getToken(request);
-        if (StringUtils.isNotEmpty(token))
-        {
+        if (StringUtils.isNotEmpty(token)) {
             String username = JwtUtils.getUserName(token);
             // 删除用户缓存记录
             AuthUtil.logoutByToken(token);
@@ -56,11 +55,9 @@ public class TokenController
     }
 
     @PostMapping("refresh")
-    public R<?> refresh(HttpServletRequest request)
-    {
+    public R<?> refresh(HttpServletRequest request) {
         LoginUser loginUser = tokenService.getLoginUser(request);
-        if (StringUtils.isNotNull(loginUser))
-        {
+        if (StringUtils.isNotNull(loginUser)) {
             // 刷新令牌有效期
             tokenService.refreshToken(loginUser);
             return R.ok();
@@ -69,8 +66,7 @@ public class TokenController
     }
 
     @PostMapping("register")
-    public R<?> register(@RequestBody RegisterBody registerBody)
-    {
+    public R<?> register(@RequestBody RegisterBody registerBody) {
         // 用户注册
         sysLoginService.register(registerBody.getUsername(), registerBody.getPassword());
         return R.ok();

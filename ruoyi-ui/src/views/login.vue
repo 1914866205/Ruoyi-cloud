@@ -76,8 +76,20 @@
           style="width:100%;"
           @click.native.prevent="handleLogin"
         >
+          <!-- 绑定一个 loading参数，默认是false，意思是  是不是加载中呗
+
+          type	类型	string	primary / success / warning / danger / info / text
+
+           @click.native.prevent
+          1.给vue组件绑定事件时候，必须加上native ，否则会认为监听的是来自Item组件自定义的事件，
+          2.prevent 是用来阻止默认的 ，相当于原生的event.preventDefault()
+          注意：preventDefault() 方法阻止元素发生默认的行为（例如，当点击提交按钮时阻止对表单的提交）。
+
+          显然，这个按钮会触发一个  handleLogin  的方法
+           -->
           <span v-if="!loading">登 录</span>
           <span v-else>登 录 中...</span>
+          <!-- 这里就是根据 loading 的值动态显示要显示的内容 -->
         </el-button>
         <div style="float: right;" v-if="register">
           <router-link class="link-type" :to="'/register'">立即注册</router-link>
@@ -196,8 +208,27 @@ export default {
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
+        /**
+         * 以前经常用 this.refs，只知道这样用，不知道是干啥的，今天刚好看看了
+         * 参考  https://blog.csdn.net/qq_38128179/article/details/88876060
+         *   在JavaScript中需要通过document.querySelector("#demo")来获取dom节点，然后再获取这个节点的值。
+         * 在Vue中，我们不用获取dom节点，元素绑定ref之后，直接通过this.$refs即可调用，这样可以减少获取dom节点的消耗。
+         *
+         * 咦，在哪绑定的ref
+         * 哦，在第三行
+         * <template>
+                 <div class="login">
+                    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
+                           <h3 class="title">若依后台管理系统</h3>
+
+           通俗的讲，ref特性就是为元素或子组件赋予一个ID引用,通过this.$refs.refName来访问元素或子组件的实例
+           this.$refs是一个对象，持有当前组件中注册过 ref特性的所有 DOM 元素和子组件实例
+           且只有在组件渲染完成后才填充，在初始渲染的时候不能访问它们，并且它是非响应式的，因此不能用它在模板中做数据绑定
+
+         validate 根据自定义的规则进行校验，符合规则返回true，否则false
+         */
         if (valid) {
-          this.loading = true;
+          this.loading = true; //表示现在开始登录
           if (this.loginForm.rememberMe) {
             Cookies.set("username", this.loginForm.username, { expires: 30 });
             Cookies.set("password", encrypt(this.loginForm.password), { expires: 30 });
@@ -208,6 +239,14 @@ export default {
             Cookies.remove('rememberMe');
           }
           this.$store.dispatch("Login", this.loginForm).then(() => {
+            //this.$store.dispatch(‘Login’, this.loginForm)来调取store里的user.js的login方法，从而要更新。
+            //参考 https://blog.csdn.net/longzhoufeng/article/details/103658726
+            //dispatch：含有异步操作，数据提交至 actions ，可用于向后台提交数据
+            // this.$store.dispatch('isLogin', true);
+            // commit：同步操作，数据提交至 mutations ，可用于读取用户信息写到缓存里
+            // this.$store.commit('loginStatus', 1);
+
+            //如果登录成功，路由转发到首页
             this.$router.push({ path: this.redirect || "/" }).catch(()=>{});
           }).catch(() => {
             this.loading = false;

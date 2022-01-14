@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 登录方法
+// 登录方法 这里没啥好说的，涛涛表示有手就行
 export function login(username, password, code, uuid) {
   return request({
     url: '/auth/login',
