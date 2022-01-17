@@ -120,6 +120,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="selectUserByUserName" parameterType="String" resultMap="SysUserResult">
+<!--selectUserByUserName 要和方法名一致
+	 parameterType="String"  是获取的参数类型
+	 resultMap="SysUserResult"  是返回值类型
+解释：
+include是引用SQL代码。
+refid 是引用的sql的id名称，一定要唯一。
+作用：
+有共同的SQL片段，为了不重复写。
+方便后期维护。
+把字段都写出来，不用*代替，也是为了提高效率。
+参考 https://blog.csdn.net/weixin_44839439/article/details/116452552
+		-->
 	    <include refid="selectUserVo"/>
 		where u.user_name = #{userName}
 	</select>

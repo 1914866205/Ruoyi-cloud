@@ -23,7 +23,7 @@ public interface RemoteUserService
 {
     /**
      * 通过用户名查询用户信息
-     *
+     * 调用的是system模块下的SysUserController方法
      * @param username 用户名
      * @param source 请求来源
      * @return 结果

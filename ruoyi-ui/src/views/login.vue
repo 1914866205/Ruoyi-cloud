@@ -1,15 +1,33 @@
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
+<!-- 元素绑定loginForm
+ 在Vue中，我们不用获取dom节点，元素绑定ref之后，直接通过this.$refs即可调用，这样可以减少获取dom节点的消耗。
+  :model="loginForm"   绑定值 loginForm
+  :rules="loginRules"  绑定校验规则
+ -->
       <h3 class="title">若依后台管理系统</h3>
       <el-form-item prop="username">
+        <!-- prop用法 https://cn.vuejs.org/v2/guide/components-props.html
+        所有的 prop 都使得其父子 prop 之间形成了一个单向下行绑定：父级 prop 的更新会向下流动到子组件中，
+        但是反过来则不行。这样会防止从子组件意外变更父级组件的状态，从而导致你的应用的数据流向难以理解。
+        -->
         <el-input
           v-model="loginForm.username"
           type="text"
           auto-complete="off"
           placeholder="账号"
         >
+        <!--
+        auto-complete="off"   关闭代码自动补全，什么意思呢，把鼠标光标放到输入框，不会自动出现下拉框，如果改为on,则会出现近期输入的数据。
+        autocomplete 属性规定输入字段是否应该启用自动完成功能。
+        placeholder 属性提供可描述输入字段预期值的提示信息（hint）。
+        该提示会在输入字段为空时显示，并会在字段获得焦点时消失。
+         -->
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
+          <!-- 用户图标
+           slot 是对组件的扩展，通过slot插槽向组件内部指定位置传递内容，通过slot可以父子传参
+           -->
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
@@ -20,6 +38,12 @@
           placeholder="密码"
           @keyup.enter.native="handleLogin"
         >
+        <!--
+       @keyup.enter  是  vue 监听键盘回车事件
+        如果是封装了组件，要用
+        @keyup.enter.native
+        最后效果就是，按下回车键，调用handleLogin方法
+         -->
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
@@ -68,6 +92,9 @@
         </div>
       </el-form-item>
       <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
+      <!-- 是否记住密码，绑定loginForm.rememberMe
+
+       -->
       <el-form-item style="width:100%;">
         <el-button
           :loading="loading"
@@ -94,6 +121,7 @@
         <div style="float: right;" v-if="register">
           <router-link class="link-type" :to="'/register'">立即注册</router-link>
         </div>
+        <!-- 注册功能    router-link  :to="'/register'   组件内跳转  -->
       </el-form-item>
     </el-form>
     <!--  底部  -->
@@ -128,6 +156,15 @@ export default {
           { required: true, trigger: "blur", message: "请输入您的密码" }
         ],
         code: [{ required: true, trigger: "change", message: "请输入验证码" }]
+        /**
+         * trigger: 'blur'
+                  blur失去焦点
+                  比如输入框里。校验文本框是否为空
+           trigger: 'change'
+                  change数据改变
+                  比如
+                  下图这些。需要手动选择的东西，用change
+         */
       },
       loading: false,
       // 验证码开关
@@ -143,6 +180,11 @@ export default {
         this.redirect = route.query && route.query.redirect;
       },
       immediate: true
+      /**
+       * 说明加载登录页面时就会执行handler函数，handler的第一个参数表示to,
+         所以上述代码的意义就是，加载登录页后，直接获取，登录页地址栏的的redirect参数，赋值给this.redirect
+         参照 https://blog.csdn.net/qq_35176916/article/details/88744836
+       */
     }
   },
   created() {
@@ -203,6 +245,7 @@ export default {
       this.loginForm = {
         username: username === undefined ? this.loginForm.username : username,
         password: password === undefined ? this.loginForm.password : decrypt(password),
+        //  RSA解密
         rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
       };
     },
@@ -230,10 +273,18 @@ export default {
         if (valid) {
           this.loading = true; //表示现在开始登录
           if (this.loginForm.rememberMe) {
+            // 如果选择记住密码，在cookies里删除用户名，密码，记住密码
             Cookies.set("username", this.loginForm.username, { expires: 30 });
             Cookies.set("password", encrypt(this.loginForm.password), { expires: 30 });
+            // RSA加密  https://blog.csdn.net/BADAO_LIUMANG_QIZHI/article/details/108343805
+            /**
+             * 前端使用Vue在进行登录时，需要将密码存进cookie中。
+              为了防止密码明文暴露，前端需要采用加密方式对密码进行加密。
+              常用加密方式之一就是RSA加密解密。
+             */
             Cookies.set('rememberMe', this.loginForm.rememberMe, { expires: 30 });
           } else {
+            // 否则在cookies里删除用户名，密码，记住密码
             Cookies.remove("username");
             Cookies.remove("password");
             Cookies.remove('rememberMe');
@@ -250,8 +301,10 @@ export default {
             this.$router.push({ path: this.redirect || "/" }).catch(()=>{});
           }).catch(() => {
             this.loading = false;
+            //加载中改为false，暴露登录按钮
             if (this.captchaOnOff) {
               this.getCode();
+              //重新获取验证码
             }
           });
         }

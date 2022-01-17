@@ -66,19 +66,66 @@ const user = {
 　　                all方法的效果实际就是 谁跑的慢，那么就以谁为准来执行回调，而race则相反，谁跑的快，就以谁为准来执行回调。
        */
       return new Promise((resolve, reject) => {
+        /**
+         *
+         * 传值
+         *{
+            "username": "admin",
+            "password": "admin123",
+            "code": "0",
+            "uuid": "60cd9a548bd8491a9f67b96f64943a29"
+          }
+
+          接收
+          {"code":200,
+          "msg":null,
+          "data":{
+            "access_token":"eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX2tleSI6IjViM2I2MjM1LTRkZjAtNDc2My04NDJlLTg3ZjljZmYxNWZmNiIsInVzZXJuYW1lIjoiYWRtaW4ifQ.mSYKR4AFVB-p41FneO_f_J53w9DQHf2kEovi-9dtQuKWzZvgTnLlAIP6zlqXofx5X2kOzXEAXqy8ZG2sdxNdOA",
+            "expires_in":720}}
+         */
         login(username, password, code, uuid).then(res => {
+
           //这些就是后端返回来后的要看的了，暂且不提，先看这个code经历了什么
           //此处调用了login方法，传来四个参数  username, password, code, uuid
           // import { login, logout, getInfo, refreshToken } from '@/api/login'
           // 这个方法是从/api/login导入的，进去看看
           let data = res.data
-          setToken(data.access_token)
-          commit('SET_TOKEN', data.access_token)
-          setExpiresIn(data.expires_in)
-          commit('SET_EXPIRES_IN', data.expires_in)
-          resolve()
+          //获取后端返回来的data
+          //设置token
+          setToken(data.access_token)  //设置token
+          commit('SET_TOKEN', data.access_token)  //提交token
+          setExpiresIn(data.expires_in) //设置到期时间
+          commit('SET_EXPIRES_IN', data.expires_in)  //提交到期时间
+          resolve()  //顺序执行，不用返回东西
+          // resolve代表这个Promise实例成功之后的回调函数
+          /**
+           * https://blog.csdn.net/m0_45084130/article/details/120288713
+           * resolve详解
+           * 普通函数
+                // 创建一个普通的函数
+                function ordinaryFunction() {
+                  return '你是一个好人';
+                }
+                // 调用
+                var acceptValue = ordinaryFunction();
+                console.log(acceptValue); // 你是一个好人
+
+              Promise的resolve
+                // 创建一个promise出来
+                function promiseFunction() {
+                  return new Promise(resolve => {
+                    resolve('你是一个好人');
+                  })
+                }
+
+                // 调用
+                promiseFunction().then(res => {
+                  acceptValue = res;
+                  console.log(acceptValue); // 你是一个好人
+                })
+           */
         }).catch(error => {
-          reject(error)
+          reject(error)  //捕捉异常，返回错误信息
         })
       })
     },
