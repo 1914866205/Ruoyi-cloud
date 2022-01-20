@@ -37,7 +37,7 @@ public class TokenController {
         // LoginBody 就是对应的表单实体，是用户登录对象 ，form就是传来的参数
         // 用户登录
         LoginUser userInfo = sysLoginService.login(form.getUsername(), form.getPassword());
-        // 获取登录token
+        // 根据userInfo生成登录token
         return R.ok(tokenService.createToken(userInfo));
     }
 
