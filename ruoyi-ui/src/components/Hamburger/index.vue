@@ -17,13 +17,19 @@
 export default {
   name: 'Hamburger',
   props: {
-    isActive: {
+    isActive: {  //显示不同的图标
       type: Boolean,
       default: false
     }
   },
   methods: {
     toggleClick() {
+      //在子组件中需要向父组件传值处使用this.$emit("function",param);   //其中function为父组件定义函数，param为需要传递参数
+      /**
+       * vue中 关于$emit的用法
+        1、父组件可以使用 props 把数据传给子组件。
+        2、子组件可以使用 $emit 触发父组件的自定义事件。
+        */
       this.$emit('toggleClick')
     }
   }

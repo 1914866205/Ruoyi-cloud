@@ -58,7 +58,12 @@
           <el-link href="https://blog.csdn.net/niTaoTaoa/article/details/122528410" type="primary" target="_blank"
             >>☛☛点我进入☚☚</el-link
           ><br />
-                    &nbsp;&nbsp;&nbsp; 史上最简单的 SpringCloud 教程 | 终章
+                    &nbsp;&nbsp;&nbsp; 涛涛的若依学习笔记——前端模块的目录结构
+          <!--&nbsp;一个空格  -->
+          <el-link href="https://editor.csdn.net/md?not_checkout=1&articleId=122601659" type="primary" target="_blank"
+            >>☛☛点我进入☚☚</el-link
+          ><br />
+                &nbsp;&nbsp;&nbsp; 史上最简单的 SpringCloud 教程 | 终章
           <!--&nbsp;一个空格  -->
           <el-link href="https://forezp.blog.csdn.net/article/details/70148833" type="primary" target="_blank"
             >>☛☛点我进入☚☚</el-link

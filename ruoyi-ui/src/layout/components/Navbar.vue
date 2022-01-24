@@ -1,14 +1,67 @@
 <template>
   <div class="navbar">
     <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <!-- 此处根据 sidebar.opened的值进行动态变换
+    这个 sidebar.opened 的值让我找了好久
 
+来自下面这里
+  ...mapGetters([
+      'sidebar', // // 使用对象展开运算符将 getter 混入 computed 对象中
+      'avatar',
+      'device'
+    ])
+那么这个值从哪里来的呢
+
+import { mapGetters } from 'vuex'
+
+来自这里的引入，来 我们看看这里面
+
+
+const getters = {
+  sidebar: state => state.app.sidebar,
+  size: state => state.app.size,
+  device: state => state.app.device,
+  visitedViews: state => state.tagsView.visitedViews,
+  cachedViews: state => state.tagsView.cachedViews,
+  token: state => state.user.token,
+  avatar: state => state.user.avatar,
+  name: state => state.user.name,
+  introduction: state => state.user.introduction,
+  roles: state => state.user.roles,
+  permissions: state => state.user.permissions,
+  permission_routes: state => state.permission.routes,
+  topbarRouters:state => state.permission.topbarRouters,
+  defaultRoutes:state => state.permission.defaultRoutes,
+  sidebarRouters:state => state.permission.sidebarRouters,
+}
+export default getters
+
+好家伙 ，一大堆，这里第一个就是我们要的值
+ sidebar: state => state.app.sidebar,
+ 不就是 this.$store.state.app.sidebar
+
+    ...mapGetters([
+      // 'sidebar',  // 使用对象展开运算符将 getter 混入 computed 对象中
+      'avatar',
+      'device'
+    ]),
+    sidebar:function(){
+      return this.$store.state.app.sidebar
+    }
+    完美替换
+
+
+@toggleClick="toggleSideBar"   https://www.runoob.com/jquery/eff-toggle.html
+    隐藏和显示之间的切换
+     -->
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!topNav"/>
+    <!-- 当没有顶部导航栏时显示顶部标签路径 -->
     <top-nav id="topmenu-container" class="topmenu-container" v-if="topNav"/>
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
-        
+
         <el-tooltip content="源码地址" effect="dark" placement="bottom">
           <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />
         </el-tooltip>
@@ -70,10 +123,14 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'sidebar',
+     // 'sidebar',  // 使用对象展开运算符将 getter 混入 computed 对象中
       'avatar',
       'device'
     ]),
+    sidebar:function(){
+      return this.$store.state.app.sidebar
+    }
+    ,
     setting: {
       get() {
         return this.$store.state.settings.showSettings
@@ -94,6 +151,17 @@ export default {
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
+      /**
+       * this.$store.dispatch() 与 this.$store.commit()方法的区别总的来说他们只是存取方式的不同,两个方法都是传值给vuex的mutation改变state
+this.$store.dispatch() ：含有异步操作，例如向后台提交数据，写法：this.$store.dispatch(‘action方法名’,值)
+this.$store.commit()：同步操作，，写法：this.$store.commit(‘mutations方法名’,值)
+commit: 同步操作
+存储 this.$store.commit('changeValue',name)
+取值 this.$store.state.changeValue
+dispatch: 异步操作
+存储 this.$store.dispatch('getlists',name)
+取值 this.$store.getters.getlists
+*/
     },
     async logout() {
       this.$confirm('确定注销并退出系统吗？', '提示', {

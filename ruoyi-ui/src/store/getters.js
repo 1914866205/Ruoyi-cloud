@@ -1,5 +1,5 @@
 const getters = {
-  sidebar: state => state.app.sidebar,
+  sidebar: state => state.app.sidebar,  //用于对侧边栏的控制
   size: state => state.app.size,
   device: state => state.app.device,
   visitedViews: state => state.tagsView.visitedViews,
