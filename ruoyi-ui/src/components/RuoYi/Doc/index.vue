@@ -3,7 +3,6 @@
     <svg-icon icon-class="question" @click="goto" />
   </div>
 </template>
-
 <script>
 export default {
   name: 'RuoYiDoc',
@@ -14,7 +13,7 @@ export default {
   },
   methods: {
     goto() {
-      window.open(this.url)
+      window.open(this.url) //打开一个新的窗口
     }
   }
 }

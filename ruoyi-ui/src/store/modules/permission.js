@@ -7,16 +7,20 @@ import InnerLink from '@/layout/components/InnerLink'
 
 const permission = {
   state: {
-    routes: [],
-    addRoutes: [],
-    defaultRoutes: [],
-    topbarRouters: [],
-    sidebarRouters: []
+    routes: [],  //所有的页面路由
+    addRoutes: [], //当前路由
+    defaultRoutes: [],//默认路由
+    topbarRouters: [],//顶部路由
+    sidebarRouters: []//侧边路由
   },
   mutations: {
     SET_ROUTES: (state, routes) => {
       state.addRoutes = routes
       state.routes = constantRoutes.concat(routes)
+      /**
+       * constantRoutes： 代表那些不需要动态判断权限的路由，如登录页、404、等通用页面。
+         asyncRoutes： 代表那些需求动态判断权限并通过 addRoutes 动态添加的页面
+       */
     },
     SET_DEFAULT_ROUTES: (state, routes) => {
       state.defaultRoutes = constantRoutes.concat(routes)

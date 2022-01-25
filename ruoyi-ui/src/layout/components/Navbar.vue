@@ -60,12 +60,20 @@ export default getters
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
+        <!-- 如果不是手机设备   -->
+        <!-- 搜索组件 -->
         <search id="header-search" class="right-menu-item" />
-
         <el-tooltip content="源码地址" effect="dark" placement="bottom">
           <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />
         </el-tooltip>
+        <!--
+        effect	默认提供的主题	String	dark/light	dark
+        content	显示的内容，也可以通过 slot#content 传入 DOM	String
 
+        placement	Tooltip 的出现位置
+        top/top-start/top-end/bottom/bottom-start/bottom-end/left/left-start/left-end/right/right-start/right-end
+        默认值 	bottom
+         -->
         <el-tooltip content="文档地址" effect="dark" placement="bottom">
           <ruo-yi-doc id="ruoyi-doc" class="right-menu-item hover-effect" />
         </el-tooltip>
