@@ -1,9 +1,10 @@
 const state = {
-  visitedViews: [],
-  cachedViews: []
+  visitedViews: [], //展示视图
+  cachedViews: [] //缓存视图
 }
 
 const mutations = {
+  // 添加视图
   ADD_VISITED_VIEW: (state, view) => {
     if (state.visitedViews.some(v => v.path === view.path)) return
     state.visitedViews.push(
@@ -12,13 +13,14 @@ const mutations = {
       })
     )
   },
+  // 添加缓存视图
   ADD_CACHED_VIEW: (state, view) => {
     if (state.cachedViews.includes(view.name)) return
     if (view.meta && !view.meta.noCache) {
       state.cachedViews.push(view.name)
     }
   },
-
+// 删除可视视图
   DEL_VISITED_VIEW: (state, view) => {
     for (const [i, v] of state.visitedViews.entries()) {
       if (v.path === view.path) {
@@ -27,16 +29,18 @@ const mutations = {
       }
     }
   },
+  //删除缓存视图
   DEL_CACHED_VIEW: (state, view) => {
     const index = state.cachedViews.indexOf(view.name)
     index > -1 && state.cachedViews.splice(index, 1)
   },
-
+  // 删除其他路径的可视视图
   DEL_OTHERS_VISITED_VIEWS: (state, view) => {
     state.visitedViews = state.visitedViews.filter(v => {
       return v.meta.affix || v.path === view.path
     })
   },
+  // 删除其他缓存视图
   DEL_OTHERS_CACHED_VIEWS: (state, view) => {
     const index = state.cachedViews.indexOf(view.name)
     if (index > -1) {
@@ -45,16 +49,17 @@ const mutations = {
       state.cachedViews = []
     }
   },
-
+  // 删除所有可视视图
   DEL_ALL_VISITED_VIEWS: state => {
     // keep affix tags
     const affixTags = state.visitedViews.filter(tag => tag.meta.affix)
     state.visitedViews = affixTags
   },
+  // 删除所有缓存视图
   DEL_ALL_CACHED_VIEWS: state => {
     state.cachedViews = []
   },
-
+  // 更新可视视图
   UPDATE_VISITED_VIEW: (state, view) => {
     for (let v of state.visitedViews) {
       if (v.path === view.path) {
@@ -63,7 +68,7 @@ const mutations = {
       }
     }
   },
-  
+  // 删除右边视图
   DEL_RIGHT_VIEWS: (state, view) => {
     const index = state.visitedViews.findIndex(v => v.path === view.path)
     if (index === -1) {
@@ -80,7 +85,7 @@ const mutations = {
       return false
     })
   },
-
+ // 删除左边视图
   DEL_LEFT_VIEWS: (state, view) => {
     const index = state.visitedViews.findIndex(v => v.path === view.path)
     if (index === -1) {

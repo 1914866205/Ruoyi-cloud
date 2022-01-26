@@ -1,6 +1,11 @@
 <template>
   <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger
+      id="hamburger-container"
+      :is-active="sidebar.opened"
+      class="hamburger-container"
+      @toggleClick="toggleSideBar"
+    />
     <!-- 此处根据 sidebar.opened的值进行动态变换
     这个 sidebar.opened 的值让我找了好久
 
@@ -54,12 +59,16 @@ export default getters
 @toggleClick="toggleSideBar"   https://www.runoob.com/jquery/eff-toggle.html
     隐藏和显示之间的切换
      -->
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!topNav"/>
+    <breadcrumb
+      id="breadcrumb-container"
+      class="breadcrumb-container"
+      v-if="!topNav"
+    />
     <!-- 当没有顶部导航栏时显示顶部标签路径 -->
-    <top-nav id="topmenu-container" class="topmenu-container" v-if="topNav"/>
+    <top-nav id="topmenu-container" class="topmenu-container" v-if="topNav" />
 
     <div class="right-menu">
-      <template v-if="device!=='mobile'">
+      <template v-if="device !== 'mobile'">
         <!-- 如果不是手机设备   -->
         <!-- 搜索组件 -->
         <search id="header-search" class="right-menu-item" />
@@ -78,17 +87,21 @@ export default getters
           <ruo-yi-doc id="ruoyi-doc" class="right-menu-item hover-effect" />
         </el-tooltip>
 
+<!-- 这是一个全屏组件 -->
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
-
+<!-- 调节布局大小 -->
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
-
       </template>
 
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
+      <!-- 下拉菜单  https://element.eleme.cn/#/zh-CN/component/dropdown#bu-tong-chi-cun -->
+      <el-dropdown
+        class="avatar-container right-menu-item hover-effect"
+        trigger="click"
+      >
         <div class="avatar-wrapper">
-          <img :src="avatar" class="user-avatar">
+          <img :src="avatar" class="user-avatar" />
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -108,15 +121,15 @@ export default getters
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import TopNav from '@/components/TopNav'
-import Hamburger from '@/components/Hamburger'
-import Screenfull from '@/components/Screenfull'
-import SizeSelect from '@/components/SizeSelect'
-import Search from '@/components/HeaderSearch'
-import RuoYiGit from '@/components/RuoYi/Git'
-import RuoYiDoc from '@/components/RuoYi/Doc'
+import { mapGetters } from "vuex";
+import Breadcrumb from "@/components/Breadcrumb";
+import TopNav from "@/components/TopNav";
+import Hamburger from "@/components/Hamburger";
+import Screenfull from "@/components/Screenfull";
+import SizeSelect from "@/components/SizeSelect";
+import Search from "@/components/HeaderSearch";
+import RuoYiGit from "@/components/RuoYi/Git";
+import RuoYiDoc from "@/components/RuoYi/Doc";
 
 export default {
   components: {
@@ -131,34 +144,33 @@ export default {
   },
   computed: {
     ...mapGetters([
-     // 'sidebar',  // 使用对象展开运算符将 getter 混入 computed 对象中
-      'avatar',
-      'device'
+      // 'sidebar',  // 使用对象展开运算符将 getter 混入 computed 对象中
+      "avatar", //用户头像
+      "device" //装置
     ]),
-    sidebar:function(){
-      return this.$store.state.app.sidebar
-    }
-    ,
+    sidebar: function() {
+      return this.$store.state.app.sidebar;
+    },
     setting: {
       get() {
-        return this.$store.state.settings.showSettings
+        return this.$store.state.settings.showSettings;
       },
       set(val) {
-        this.$store.dispatch('settings/changeSetting', {
-          key: 'showSettings',
+        this.$store.dispatch("settings/changeSetting", {
+          key: "showSettings",
           value: val
-        })
+        });
       }
     },
     topNav: {
       get() {
-        return this.$store.state.settings.topNav
+        return this.$store.state.settings.topNav;
       }
     }
   },
   methods: {
     toggleSideBar() {
-      this.$store.dispatch('app/toggleSideBar')
+      this.$store.dispatch("app/toggleSideBar");
       /**
        * this.$store.dispatch() 与 this.$store.commit()方法的区别总的来说他们只是存取方式的不同,两个方法都是传值给vuex的mutation改变state
 this.$store.dispatch() ：含有异步操作，例如向后台提交数据，写法：this.$store.dispatch(‘action方法名’,值)
@@ -172,18 +184,20 @@ dispatch: 异步操作
 */
     },
     async logout() {
-      this.$confirm('确定注销并退出系统吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$store.dispatch('LogOut').then(() => {
-          location.href = '/index';
+      this.$confirm("确定注销并退出系统吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$store.dispatch("LogOut").then(() => {
+            location.href = "/index";
+          });
         })
-      }).catch(() => {});
+        .catch(() => {});
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -192,18 +206,18 @@ dispatch: 异步操作
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
   .hamburger-container {
     line-height: 46px;
     height: 100%;
     float: left;
     cursor: pointer;
-    transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    transition: background 0.3s;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
-      background: rgba(0, 0, 0, .025)
+      background: rgba(0, 0, 0, 0.025);
     }
   }
 
@@ -240,10 +254,10 @@ dispatch: 异步操作
 
       &.hover-effect {
         cursor: pointer;
-        transition: background .3s;
+        transition: background 0.3s;
 
         &:hover {
-          background: rgba(0, 0, 0, .025)
+          background: rgba(0, 0, 0, 0.025);
         }
       }
     }

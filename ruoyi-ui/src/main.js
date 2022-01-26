@@ -72,7 +72,7 @@ DictData.install()
  * please remove it before going online! ! !
  */
 
-Vue.use(Element, {
+Vue.use(Element, {// 设置默认和刷新浏览器设置为你指定的大小
   size: Cookies.get('size') || 'medium' // set element-ui default size
 })
 
