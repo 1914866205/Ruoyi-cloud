@@ -28,7 +28,6 @@ public class CacheRequestFilter extends AbstractGatewayFilterFactory<CacheReques
     {
         super(Config.class);
     }
-
     @Override
     public String name()
     {

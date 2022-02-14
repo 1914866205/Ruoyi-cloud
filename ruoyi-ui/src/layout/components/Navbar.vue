@@ -100,6 +100,7 @@ export default getters
         class="avatar-container right-menu-item hover-effect"
         trigger="click"
       >
+      <!--trigger="click" 激活方式  点击会显示下拉菜单，默认是悬浮激活 hover  -->
         <div class="avatar-wrapper">
           <img :src="avatar" class="user-avatar" />
           <i class="el-icon-caret-bottom" />

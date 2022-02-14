@@ -1,6 +1,12 @@
 <template>
   <div class="app-container">
     <el-row :gutter="20">
+    <!-- 
+       gutter是指栅格间间隔，offset是指栅格左侧的间隔格数
+       https://element.eleme.cn/#/zh-CN/component/layout  栅格布局
+       span	栅格占据的列数
+       xs	<768px 响应式栅格数或者栅格属性对象
+    -->
       <el-col :span="6" :xs="24">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
@@ -10,6 +16,7 @@
             <div class="text-center">
               <userAvatar :user="user" />
             </div>
+          <!-- 根据用户信息设置头像 -->
             <ul class="list-group list-group-striped">
               <li class="list-group-item">
                 <svg-icon icon-class="user" />用户名称
@@ -36,6 +43,7 @@
                 <div class="pull-right">{{ user.createTime }}</div>
               </li>
             </ul>
+          <!-- 都能看懂,就不说啥了  -->          
           </div>
         </el-card>
       </el-col>
@@ -44,6 +52,7 @@
           <div slot="header" class="clearfix">
             <span>基本资料</span>
           </div>
+          <!-- 标签页 -->
           <el-tabs v-model="activeTab">
             <el-tab-pane label="基本资料" name="userinfo">
               <userInfo :user="user" />
